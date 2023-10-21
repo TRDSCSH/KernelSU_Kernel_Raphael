@@ -8,7 +8,7 @@ on:
     
 jobs:
   Patch_KernelSU:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     env:
       KernelSU_Dir: /home/runner/work/KernelSU
       Setup_Dir: /home/runner/work/Setup_Dir
