@@ -16,8 +16,8 @@ jobs:
       - name: Download KernelSU from 'SoDebug/KernelSU'
         id: get-kernelsu
         run: |
-          mkdir $KernelSU_Dir
-          git clone https://github.com/SoDebug/KernelSU.git $KernelSU_Dir
+          sudo mkdir $KernelSU_Dir
+          sudo git clone https://github.com/SoDebug/KernelSU.git $KernelSU_Dir
           
       - name: Get KernelSU id
         id: get-kernelsu-id
@@ -29,7 +29,7 @@ jobs:
         id: get-patch
         run: |
           mkdir $Setup_Dir 
-          git clone -b setup https://github.com/SoDebug/KernelSU.git $Setup_Dir
+          sudo git clone -b setup https://github.com/SoDebug/KernelSU.git $Setup_Dir
           
       - name: Get Patch id
         id: get-patch-id
@@ -135,10 +135,10 @@ jobs:
       - name: Cloning Sources and Toolchain
         if: ${{ env.test_patch != 'true' }}        
         run: |
-          git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 --depth=1 -b master ~/clang
-          git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9 -b android-10.0.0_r47 --depth=1 --single-branch --no-tags ~/aarch64-linux-android-4.9
-          git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9 -b android-10.0.0_r47 --depth=1 --single-branch --no-tags ~/arm-linux-androideabi-4.9
-          git clone https://github.com/SoDebug/AnyKernel.git ${{ env.AnyKernel }}          
+          sudo git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 --depth=1 -b master ~/clang
+          sudo git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9 -b android-10.0.0_r47 --depth=1 --single-branch --no-tags ~/aarch64-linux-android-4.9
+          sudo git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9 -b android-10.0.0_r47 --depth=1 --single-branch --no-tags ~/arm-linux-androideabi-4.9
+          sudo git clone https://github.com/SoDebug/AnyKernel.git ${{ env.AnyKernel }}          
 
       - name: Compiling Kernel
         if: ${{ env.test_patch != 'true' }}      
@@ -221,10 +221,10 @@ jobs:
       - name: Cloning Sources and Toolchain
         if: ${{ env.test_patch != 'true' }}        
         run: |
-          git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 --depth=1 -b master ~/clang
-          git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9 -b android-10.0.0_r47 --depth=1 --single-branch --no-tags ~/aarch64-linux-android-4.9
-          git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9 -b android-10.0.0_r47 --depth=1 --single-branch --no-tags ~/arm-linux-androideabi-4.9
-          git clone https://github.com/SoDebug/AnyKernel.git ${{ env.AnyKernel }}    
+          sudo git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 --depth=1 -b master ~/clang
+          sudo git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9 -b android-10.0.0_r47 --depth=1 --single-branch --no-tags ~/aarch64-linux-android-4.9
+          sudo git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9 -b android-10.0.0_r47 --depth=1 --single-branch --no-tags ~/arm-linux-androideabi-4.9
+          sudo git clone https://github.com/SoDebug/AnyKernel.git ${{ env.AnyKernel }}    
           
       - name: Compiling Kernel
         if: ${{ env.test_patch != 'true' }}      
@@ -307,10 +307,10 @@ jobs:
       - name: Cloning Sources and Toolchain
         if: ${{ env.test_patch != 'true' }}        
         run: |
-          git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 --depth=1 -b master ~/clang
-          git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9 -b android-10.0.0_r47 --depth=1 --single-branch --no-tags ~/aarch64-linux-android-4.9
-          git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9 -b android-10.0.0_r47 --depth=1 --single-branch --no-tags ~/arm-linux-androideabi-4.9
-          git clone https://github.com/SoDebug/AnyKernel.git ${{ env.AnyKernel }}     
+          sudo git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 --depth=1 -b master ~/clang
+          sudo git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9 -b android-10.0.0_r47 --depth=1 --single-branch --no-tags ~/aarch64-linux-android-4.9
+          sudo git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9 -b android-10.0.0_r47 --depth=1 --single-branch --no-tags ~/arm-linux-androideabi-4.9
+          sudo git clone https://github.com/SoDebug/AnyKernel.git ${{ env.AnyKernel }}     
 
       - name: Compiling Kernel
         if: ${{ env.test_patch != 'true' }}      
