@@ -9,8 +9,6 @@ on:
 jobs:
   Patch_KernelSU:
     runs-on: self-hosted
-    container:
-      options: --user root
     env:
       KernelSU_Dir: /home/gitpod/work/KernelSU
       Setup_Dir: /home/gitpod/work/Setup_Dir
@@ -62,8 +60,6 @@ jobs:
   Collect_Config_Complie:
     needs: Patch_KernelSU
     runs-on: self-hosted
-    container:
-      options: --user root
     steps:
     
     - name: Collecting config
@@ -79,8 +75,6 @@ jobs:
   Collect_Config_Release:
     needs: Patch_KernelSU
     runs-on: self-hosted
-    container:
-      options: --user root
     steps:
     
     - name: Collecting config
