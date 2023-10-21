@@ -22,26 +22,26 @@ jobs:
       - name: Get KernelSU id
         id: get-kernelsu-id
         run: |
-          cd $KernelSU_Dir
-          echo "kernelsu_id=$(git show -s --date=short --format="%h")" >> $GITHUB_ENV
+          sudo cd $KernelSU_Dir
+          sudo echo "kernelsu_id=$(git show -s --date=short --format="%h")" >> $GITHUB_ENV
           
       - name: Download Patch form 'SoDebug/KernelSU'
         id: get-patch
         run: |
-          mkdir $Setup_Dir 
+          sudo mkdir $Setup_Dir 
           sudo git clone -b setup https://github.com/SoDebug/KernelSU.git $Setup_Dir
           
       - name: Get Patch id
         id: get-patch-id
         run: |
-          cd $Setup_Dir
-          echo "patch_id=$(git show -s --date=short --format="%h")" >> $GITHUB_ENV          
+          sudo cd $Setup_Dir
+          sudo echo "patch_id=$(git show -s --date=short --format="%h")" >> $GITHUB_ENV          
           
       - name: Patch Kernel
         run: |
           sudo cp $Setup_Dir/setup.sh $KernelSU_Dir/kernel/setup.sh
-          cd $KernelSU_Dir
-          tar czf "KernelSU_${{ env.kernelsu_id }}_Patched_${{ env.patch_id }}.tar.gz" .[!.]* *
+          sudo cd $KernelSU_Dir
+          sudo tar czf "KernelSU_${{ env.kernelsu_id }}_Patched_${{ env.patch_id }}.tar.gz" .[!.]* *
   
       - name: Upload KernelSU Patch
         uses: actions/upload-artifact@v3.1.2
@@ -65,7 +65,7 @@ jobs:
     - name: Collecting config
       id: collect_config
       run: |
-        echo "Debug=${{ secrets.Debug }}" >> $GITHUB_ENV
+        sudo echo "Debug=${{ secrets.Debug }}" >> $GITHUB_ENV
         
     - name: Setting Job
       id: set_job
@@ -80,7 +80,7 @@ jobs:
     - name: Collecting config
       id: collect_config
       run: |
-        echo "ALLOW_RELEASE=${{ secrets.ALLOW_RELEASE }}" >> $GITHUB_ENV
+        sudo echo "ALLOW_RELEASE=${{ secrets.ALLOW_RELEASE }}" >> $GITHUB_ENV
         
     - name: Setting Job
       id: set_job
@@ -99,7 +99,7 @@ jobs:
 
       - name: Set current time
         id: set_time
-        run: echo "time=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
+        run: sudo echo "time=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
             
       - name: Installing Dependencies
         if: ${{ env.test_patch != 'true' }}
@@ -121,16 +121,16 @@ jobs:
           
       - name: Integrate KernelSU
         run: |
-          cd ${{ env.CheckOut_DIR }}/KernelSU
-          tar -xzf KernelSU_*_Patched_*.tar.gz
-          echo "kernelsu_id=$(git show -s --date=short --format="%h")" >> $GITHUB_ENV
+          sudo cd ${{ env.CheckOut_DIR }}/KernelSU
+          sudo tar -xzf KernelSU_*_Patched_*.tar.gz
+          sudo echo "kernelsu_id=$(git show -s --date=short --format="%h")" >> $GITHUB_ENV
           git_count=$(git rev-list --count HEAD)
           kernelsu_version=$(expr 10000 + $git_count + 200)
-          echo "kernelsu_version=$kernelsu_version" >> $GITHUB_ENV
-          rm KernelSU_*_Patched_*.tar.gz
-          cd ..
-          rm -rf drivers/staging/kernelsu
-          sh KernelSU/kernel/setup.sh
+          sudo echo "kernelsu_version=$kernelsu_version" >> $GITHUB_ENV
+          sudo rm KernelSU_*_Patched_*.tar.gz
+          sudo cd ..
+          sudo rm -rf drivers/staging/kernelsu
+          sudo sh KernelSU/kernel/setup.sh
 
       - name: Cloning Sources and Toolchain
         if: ${{ env.test_patch != 'true' }}        
@@ -154,7 +154,7 @@ jobs:
           export CROSS_COMPILE=aarch64-linux-android-
           export CROSS_COMPILE_ARM32=arm-linux-androideabi-
           output_dir=out
-          cd ${{ env.CheckOut_DIR }}
+          sudo cd ${{ env.CheckOut_DIR }}
           make LLVM=1 LLVM_IAS=1 CC="ccache clang" raphael_defconfig
           make LLVM=1 LLVM_IAS=1 CC="ccache clang" -j$(grep -c ^processor /proc/cpuinfo)
           
@@ -164,7 +164,7 @@ jobs:
         run: |
           sudo cp -v ${{ env.CheckOut_DIR }}/out/arch/arm64/boot/Image.gz-dtb ${{ env.AnyKernel }} &&
           sudo cp -v ${{ env.CheckOut_DIR }}/out/arch/arm64/boot/dtbo.img ${{ env.AnyKernel }}/o
-          cd ${{ env.AnyKernel }}
+          sudo cd ${{ env.AnyKernel }}
           7z a -mx9 "Raphael-Kernel_KSU_${{ env.kernelsu_version }}_${{ env.kernelsu_id }}_Evolution_13.zip" *
           
       - name: Upload output_files directory
@@ -185,7 +185,7 @@ jobs:
 
       - name: Set current time
         id: set_time
-        run: echo "time=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
+        run: sudo echo "time=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
             
       - name: Installing Dependencies
         if: ${{ env.test_patch != 'true' }}
@@ -207,16 +207,16 @@ jobs:
           
       - name: Integrate KernelSU
         run: |
-          cd ${{ env.CheckOut_DIR }}/KernelSU
-          tar -xzf KernelSU_*_Patched_*.tar.gz
-          echo "kernelsu_id=$(git show -s --date=short --format="%h")" >> $GITHUB_ENV
+          sudo cd ${{ env.CheckOut_DIR }}/KernelSU
+          sudo tar -xzf KernelSU_*_Patched_*.tar.gz
+          sudo echo "kernelsu_id=$(git show -s --date=short --format="%h")" >> $GITHUB_ENV
           git_count=$(git rev-list --count HEAD)
           kernelsu_version=$(expr 10000 + $git_count + 200)
-          echo "kernelsu_version=$kernelsu_version" >> $GITHUB_ENV
-          rm KernelSU_*_Patched_*.tar.gz
-          cd ..
-          rm -rf drivers/staging/kernelsu
-          sh KernelSU/kernel/setup.sh
+          sudo echo "kernelsu_version=$kernelsu_version" >> $GITHUB_ENV
+          sudo rm KernelSU_*_Patched_*.tar.gz
+          sudo cd ..
+          sudo rm -rf drivers/staging/kernelsu
+          sudo sh KernelSU/kernel/setup.sh
 
       - name: Cloning Sources and Toolchain
         if: ${{ env.test_patch != 'true' }}        
@@ -240,7 +240,7 @@ jobs:
           export CROSS_COMPILE=aarch64-linux-android-
           export CROSS_COMPILE_ARM32=arm-linux-androideabi-
           output_dir=out
-          cd ${{ env.CheckOut_DIR }}
+          sudo cd ${{ env.CheckOut_DIR }}
           make LLVM=1 LLVM_IAS=1 CC="ccache clang" raphael_defconfig
           make LLVM=1 LLVM_IAS=1 CC="ccache clang" -j$(grep -c ^processor /proc/cpuinfo)
           
@@ -250,7 +250,7 @@ jobs:
         run: |
           sudo cp -v ${{ env.CheckOut_DIR }}/out/arch/arm64/boot/Image.gz-dtb ${{ env.AnyKernel }} &&
           sudo cp -v ${{ env.CheckOut_DIR }}/out/arch/arm64/boot/dtbo.img ${{ env.AnyKernel }}/o
-          cd ${{ env.AnyKernel }}
+          sudo cd ${{ env.AnyKernel }}
           7z a -mx9 "Raphael-Kernel_KSU_${{ env.kernelsu_version }}_${{ env.kernelsu_id }}_SOVIET-ANDROID_13.zip" *
           
       - name: Upload output_files directory
@@ -271,7 +271,7 @@ jobs:
 
       - name: Set current time
         id: set_time
-        run: echo "time=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
+        run: sudo echo "time=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
             
       - name: Installing Dependencies
         if: ${{ env.test_patch != 'true' }}
@@ -293,16 +293,16 @@ jobs:
           
       - name: Integrate KernelSU
         run: |
-          cd ${{ env.CheckOut_DIR }}/KernelSU
-          tar -xzf KernelSU_*_Patched_*.tar.gz
-          echo "kernelsu_id=$(git show -s --date=short --format="%h")" >> $GITHUB_ENV
+          sudo cd ${{ env.CheckOut_DIR }}/KernelSU
+          sudo tar -xzf KernelSU_*_Patched_*.tar.gz
+          sudo echo "kernelsu_id=$(git show -s --date=short --format="%h")" >> $GITHUB_ENV
           git_count=$(git rev-list --count HEAD)
           kernelsu_version=$(expr 10000 + $git_count + 200)
-          echo "kernelsu_version=$kernelsu_version" >> $GITHUB_ENV
-          rm KernelSU_*_Patched_*.tar.gz
-          cd ..
-          rm -rf drivers/staging/kernelsu
-          sh KernelSU/kernel/setup.sh
+          sudo echo "kernelsu_version=$kernelsu_version" >> $GITHUB_ENV
+          sudo rm KernelSU_*_Patched_*.tar.gz
+          sudo cd ..
+          sudo rm -rf drivers/staging/kernelsu
+          sudo sh KernelSU/kernel/setup.sh
 
       - name: Cloning Sources and Toolchain
         if: ${{ env.test_patch != 'true' }}        
@@ -326,7 +326,7 @@ jobs:
           export CROSS_COMPILE=aarch64-linux-android-
           export CROSS_COMPILE_ARM32=arm-linux-androideabi-
           output_dir=out
-          cd ${{ env.CheckOut_DIR }}
+          sudo cd ${{ env.CheckOut_DIR }}
           make LLVM=1 LLVM_IAS=1 CC="ccache clang" raphael_defconfig
           make LLVM=1 LLVM_IAS=1 CC="ccache clang" -j$(grep -c ^processor /proc/cpuinfo)
           
@@ -336,7 +336,7 @@ jobs:
         run: |
           sudo cp -v ${{ env.CheckOut_DIR }}/out/arch/arm64/boot/Image.gz-dtb ${{ env.AnyKernel }} &&
           sudo cp -v ${{ env.CheckOut_DIR }}/out/arch/arm64/boot/dtbo.img ${{ env.AnyKernel }}/o
-          cd ${{ env.AnyKernel }}
+          sudo cd ${{ env.AnyKernel }}
           7z a -mx9 "Raphael-Kernel_KSU_${{ env.kernelsu_version }}_${{ env.kernelsu_id }}_SOVIET-ANDROID_13_beta.zip" *
           
       - name: Upload output_files directory
@@ -355,24 +355,24 @@ jobs:
       
       - name: Set current time
         id: set_time
-        run: echo "time=$(date +'%Y-%m-%d_%H-%M-%S')" >> "$GITHUB_OUTPUT"
+        run: sudo echo "time=$(date +'%Y-%m-%d_%H-%M-%S')" >> "$GITHUB_OUTPUT"
    
       - name: Generate release tag
         id: tag
         run: |
-          echo "release_tag=$(date +"%Y%m%d")" >> $GITHUB_OUTPUT
+          sudo echo "release_tag=$(date +"%Y%m%d")" >> $GITHUB_OUTPUT
           touch release.txt
-          echo "SoDebug Kernel Config：" >> release.txt
-          echo "Device Code:raphael" >> release.txt
-          echo "Device Name：Redmi K20 Pro | Mi 9T Pro" >> release.txt
-          echo "Support Android：13.0" >> release.txt   
-          echo "KernelSU Git Verion：***" >> release.txt
-          echo "KernelSU Verion: *****" >> release.txt
-          echo "Patch ID: *******" >> release.txt
-          echo "KernelSU ID: *******" >> release.txt
-          echo "Tested: undefine" >> release.txt
-          echo "Build Date: $(date +"%Y/%m/%d")" >> release.txt
-          echo "status=success" >> $GITHUB_OUTPUT
+          sudo echo "SoDebug Kernel Config：" >> release.txt
+          sudo echo "Device Code:raphael" >> release.txt
+          sudo echo "Device Name：Redmi K20 Pro | Mi 9T Pro" >> release.txt
+          sudo echo "Support Android：13.0" >> release.txt   
+          sudo echo "KernelSU Git Verion：***" >> release.txt
+          sudo echo "KernelSU Verion: *****" >> release.txt
+          sudo echo "Patch ID: *******" >> release.txt
+          sudo echo "KernelSU ID: *******" >> release.txt
+          sudo echo "Tested: undefine" >> release.txt
+          sudo echo "Build Date: $(date +"%Y/%m/%d")" >> release.txt
+          sudo echo "status=success" >> $GITHUB_OUTPUT
 
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v3
