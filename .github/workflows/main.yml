@@ -9,6 +9,8 @@ on:
 jobs:
   Patch_KernelSU:
     runs-on: self-hosted
+    container:
+      options: --user root
     env:
       KernelSU_Dir: /home/gitpod/work/KernelSU
       Setup_Dir: /home/gitpod/work/Setup_Dir
@@ -60,6 +62,8 @@ jobs:
   Collect_Config_Complie:
     needs: Patch_KernelSU
     runs-on: self-hosted
+    container:
+      options: --user root
     steps:
     
     - name: Collecting config
@@ -75,6 +79,8 @@ jobs:
   Collect_Config_Release:
     needs: Patch_KernelSU
     runs-on: self-hosted
+    container:
+      options: --user root
     steps:
     
     - name: Collecting config
@@ -91,6 +97,8 @@ jobs:
   Complie_Evolution:
       needs: Collect_Config_Complie
       runs-on: self-hosted
+      container:
+        options: --user root
       env:
         CheckOut_DIR: /home/gitpod/work/kernel_xiaomi_raphael-ex/kernel_xiaomi_raphael-ex
         AnyKernel: /home/gitpod/work/kernel_xiaomi_raphael-ex/AnyKernel
@@ -177,6 +185,8 @@ jobs:
   Complie_SOVIET-ANDROID:
       needs: Collect_Config_Complie
       runs-on: self-hosted
+      container:
+        options: --user root
       env:
         CheckOut_DIR: /home/gitpod/work/kernel_xiaomi_raphael-ex/kernel_xiaomi_raphael
         AnyKernel: /home/gitpod/work/kernel_xiaomi_raphael-ex/AnyKernel
@@ -263,6 +273,8 @@ jobs:
   Complie_SOVIET-ANDROID_beta:
       needs: Collect_Config_Complie
       runs-on: self-hosted
+      container:
+        options: --user root
       env:
         CheckOut_DIR: /home/gitpod/work/kernel_xiaomi_raphael-ex/kernel_xiaomi_raphael
         AnyKernel: /home/gitpod/work/kernel_xiaomi_raphael-ex/AnyKernel
@@ -349,6 +361,8 @@ jobs:
   Release:
       needs: [Complie_Evolution,Collect_Config_Release,Complie_SOVIET-ANDROID,Complie_SOVIET-ANDROID_beta]
       runs-on: self-hosted
+      container:
+        options: --user root
       env:
         Release_DIR: /home/gitpod/work/release
       steps:
